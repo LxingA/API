@@ -1,0 +1,1 @@
+AOS["init"]();$(".mode")["click"](()=>$("body")["toggleClass"]("darkmode"));

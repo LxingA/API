@@ -1,0 +1,30 @@
+doctype html
+html(author=$author$ ondragstart="return false" oncontextmenu="return false" onselectstart="return false" version=$version$)
+    head
+        meta(charset="utf8")
+        meta(name="viewport" content="initial-scale=1,width=device-width,user-scalable=no")
+        link(rel="dns-prefetch" href="https://static.cloudflareinsights.com")
+        link(rel="preconnect" href="https://unicons.iconscout.com")
+        link(rel="preconnect" href=$uri$)
+        title=`${$slogan$} - ${$name$} [${$author$}]`
+        link(rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css" type="text/css")
+        link(rel="icon" href=`${$uri$}/e691dde5-0b99-4063-b381-210a340f831c.webp?v=NDZUcpwKSSlW` type="image/x-icon")
+        link(rel="stylesheet" href=`${$uri$}/28da1664-7b6d-4d7d-a240-20a89b477ad8.css?v=NDZUcpwKSSlW` type="text/css")
+        link(rel="stylesheet" href=`${$uri$}/293836de-5057-4a33-bd8b-2bc385249e13.css?v=NDZUcpwKSSlW` type="text/css")
+        link(rel="stylesheet" href=`${$uri$}/7c8aa331-a6bd-4350-a757-8283e3d1bdcf.css?v=NDZUcpwKSSlW` type="text/css")
+    body
+        button(class="mode")
+            i(class="uil uil-moon")
+        div(class="ctn" data-aos="zoom-out" data-aos-duration="1000")
+            div(class="black")
+                lord-icon(src=`${$uri$}/594a7220-b622-4bb6-a6e9-bb1776480d87.json?v=NDZUcpwKSSlW` trigger="loop" delay="1000" style="width:120px;height:120px")
+            div(class="white")
+                lord-icon(colors="primary:#ffffff" src=`${$uri$}/594a7220-b622-4bb6-a6e9-bb1776480d87.json?v=NDZUcpwKSSlW` trigger="loop" delay="1000" style="width:120px;height:120px")
+            h3=$title$
+            p=$description$
+            button(onclick="window['open']('mailto:"+$email$+"','_self')")="Contacto"
+        script(type="text/javascript" src=`${$uri$}/d526c180-5729-487b-8d8a-ca813c528476.js?v=NDZUcpwKSSlW`)
+        script(type="text/javascript" src=`${$uri$}/753105f2-99ae-4b36-95d6-151df7904b75.js?v=NDZUcpwKSSlW`)
+        script(type="text/javascript" src=`${$uri$}/ab994117-bf17-464d-b45d-849ddab64107.js?v=NDZUcpwKSSlW`)
+        script(type="text/javascript")
+            include script.js

@@ -1,0 +1,14 @@
+type CategoryChildren {
+    label: String!
+    identified: String!
+}
+
+type Category {
+    name: String!
+    description: String
+    children: [CategoryChildren]
+}
+
+type Query {
+    media_category(context:String!): [Category!]
+}
