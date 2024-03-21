@@ -42,7 +42,7 @@ export const $Link$ = (model("link",(new Schema({
         min: 8,
         max: 128,
         validate: {
-            validator: ($value:string) => /^[a-z0-9\.\_\-\/\:\&\?\%\!\@]+$/["test"]($value),
+            validator: ($value:string) => /^[a-z0-9\.\_\-\/\:\&\?\%\!\@\=\?]+$/["test"]($value),
             message: "La ruta absoluta http no tiene un formato valido"
         }
     },

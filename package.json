@@ -6,7 +6,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://portal.codeink.mx/self/code/api.git"
+    "url": "https://github.com/LxingA/API.git"
   },
   "scripts": {
     "dev": "tsc && concurrently \"tsc -w\" \"nodemon ./build/app.js\"",
@@ -29,10 +29,10 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://portal.codeink.mx/self/code/api/issues",
+    "url": "https://github.com/LxingA/API/issues",
     "email": "contacto@socasf.net"
   },
-  "homepage": "https://portal.codeink.mx/self/code/api",
+  "homepage": "https://github.com/LxingA/API",
   "devDependencies": {
     "@types/apicache": "^1.6.6",
     "@types/cors": "^2.8.17",
