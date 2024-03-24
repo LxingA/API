@@ -16,9 +16,7 @@ declare global {
             /** Identificador UUID de la Aplicación (API) en la Base de Datos */
             CkAPIEnvironmentApplicationKey: string,
             /** Clave de Acceso para el Servicio de Obtención de las Direcciones IP de la API */
-            CkAPIEnvironmentIPStaticTokenAccess: string,
-            /** Clave de Acceso para el Servicio de Almacenamiento Global de la API */
-            CkAPIEnvironmentStorageKeyAccess: string
+            CkAPIEnvironmentIPStaticTokenAccess: string
         }
     }
 }

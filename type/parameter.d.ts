@@ -44,7 +44,9 @@ interface Parameters {
     /** Objeto con los Parámetros Esenciales de la API Global */
     CkGlobParamAPI: API,
     /** Objeto con los Parámetros Globales de las Aplicaciones del Proyecto */
-    CkGlobParamAPP: Application
+    CkGlobParamAPP: Application,
+    /** Objeto con las Claves de Acceso a los Cubos de Almenamiento del Proyecto */
+    CkGlobCDNStorageZone: Record<string,string>
 };
 
 /** Definición de la Interfaz para el Objeto de Respuesta de la API */
@@ -57,6 +59,16 @@ export interface APIResponse {
     $rs$: any,
     /** Tiempo en MS del Tiempo Actual de la Solicitud */
     $tt$: number
-}
+};
+
+/** Prototipo del Objeto con la Información de un Paginador de un Aplicación */
+export interface Pagination {
+    /** Número de Elementos a Mostrar por Página */
+    perPage: number,
+    /** Página Actual en el Paginador */
+    currentPage: number,
+    /** Número Total de Elementos de la Base de Datos */
+    total: number
+};
 
 export default Parameters;

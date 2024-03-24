@@ -76,6 +76,19 @@ export const $Category$ = (model("media_category",(new Schema({
             validator: ($value$:[]) => ($value$ instanceof Array),
             message: "El contenedor con los contextos permitidos, no cumple con el formato establecido"
         }
+    },
+    /** Identificador Único para la Categoría (8) */
+    identified: {
+        required: [true,"Se requiere de un identificador para la categoría"],
+        type: String,
+        min: 4,
+        max: 8,
+        unique: true,
+        trim: true,
+        validate: {
+            validator: ($value$:string) => (typeof($value$) == "string"),
+            message: "El identificador para la categoría a asignar, no cumple con el formato establecido"
+        }
     }
 },{collection:$prefix$("category"),timestamps:true}))));
 
