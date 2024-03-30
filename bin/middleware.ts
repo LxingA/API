@@ -57,15 +57,23 @@ export const $Security$ = async($rq:Request,$rs:Response,$nt:NextFunction): Prom
         let $origin$: string[] = [];
         $Logger$({...$initial$,$message$:"El método HTTP \""+$rq["method"]+"\" está permitida en la lista \""+$methods$+"\". Se procede a verificar los origenes HTTP y las direcciones IP para el acceso a la API...",$type$:"ok"});
         if(typeof($rq["header"]("Origin")) == "undefined" || typeof($rq["header"]("Referer")) == "undefined"){
-            $origin$ = $__parameters__$["SecureOriginIP"];
-            $Logger$({...$initial$,$message$:"Se detectó que se accedió a la API sin un origen HTTP. Se procede a verificar mediante una Dirección IP de origen con la siguiente lista \""+$origin$+"\"...",$type$:"info"});
-            if(!$origin$["includes"]($rq["clientIp"] || "")){
-                $Logger$({...$initial$,$message$:"La dirección IP de origen \""+$rq["clientIp"]+"\" no está autorizada en la API. Se procede a omitir la inicialización...",$type$:"critic"});
-                $rs["status"](403)["render"]("default.pug",(await $Template$({__default__:{title:"Dirección IP no Autorizada",subtitle:"Lo sentimos. La dirección IP de dónde nos visitas no está autorizada. Solicitado al Administrador"}})));
-                $nt();
+            if(typeof $rq["header"]($__parameters__$["HTTPHeader"][2]) != "undefined"){
+                $Logger$({...$initial$,$message$:"Se detectó la cabecera con la clave de acceso de forma exclusiva a la API...",$type$:"info"});
+                if($__parameters__$["SecretAccessByNativeApps"] != $rq["header"]($__parameters__$["HTTPHeader"][2])){
+                    $Logger$({...$initial$,$message$:"La clave de acceso especial a la API no coincide con la registrada en la Base de Datos. Se procede a bloquear el acceso...",$type$:"warn"});
+                    $rs["status"](400)["render"]("default.pug",(await $Template$({__default__:{title:"Clave de Acceso Inválido",subtitle:"No tienes autorización a la API debido a la clave de acceso inválida"},__cache__:true})));
+                }else $nt();
             }else{
-                $Logger$({...$initial$,$message$:"La dirección IP \""+$rq["clientIp"]+"\" está autorizada. Se procede con la inicialización de la API...",$type$:"success"});
-                $nt();
+                $origin$ = $__parameters__$["SecureOriginIP"];
+                $Logger$({...$initial$,$message$:"Se detectó que se accedió a la API sin un origen HTTP. Se procede a verificar mediante una Dirección IP de origen con la siguiente lista \""+$origin$+"\"...",$type$:"info"});
+                if(!$origin$["includes"]($rq["clientIp"] || "")){
+                    $Logger$({...$initial$,$message$:"La dirección IP de origen \""+$rq["clientIp"]+"\" no está autorizada en la API. Se procede a omitir la inicialización...",$type$:"critic"});
+                    $rs["status"](403)["render"]("default.pug",(await $Template$({__default__:{title:"Dirección IP no Autorizada",subtitle:"Lo sentimos. La dirección IP de dónde nos visitas no está autorizada. Solicitado al Administrador"}})));
+                    $nt();
+                }else{
+                    $Logger$({...$initial$,$message$:"La dirección IP \""+$rq["clientIp"]+"\" está autorizada. Se procede con la inicialización de la API...",$type$:"success"});
+                    $nt();
+                }
             }
         }else{
             $origin$ = $__parameters__$["SecureOriginHTTP"];

@@ -33,9 +33,20 @@ type Media {
     rate: Int
     meta: [MediaCategory]
     media: MediaImages
+    identified: String!
+}
+
+type PaginationTotal {
+    pages: Int!
+    elements: Int!
+}
+
+type PaginationResponse {
+    item: [Media!]
+    total: PaginationTotal
 }
 
 type Query {
     media_category(context:String!): [Category!]
-    media_content(paginator:Pagination,filter:[String],context:String!,search:String): [Media!]
+    media_content(paginator:Pagination,filter:[String],context:String!,search:String,identified:String): PaginationResponse!
 }

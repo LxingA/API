@@ -8,11 +8,11 @@
 import $Logger$ from '../../util/logger';
 import $Storage$ from '../../bin/storage';
 import {GraphQLError} from 'graphql';
-import {$Category$,$Anime$} from '../../database/service/media';
+import {$Category$,$Anime$,$Game$} from '../../database/service/media';
 import {ResponseObject} from '../../bin/storage';
 import type {MediaType} from '../../type/service/media';
 import type {Category,CategoryChildren,Media,MediaCategory,MediaStorage} from '../../type/service/media';
-import type {Pagination} from '../../type/parameter';
+import type {Pagination,PaginationResponse} from '../../type/parameter';
 import type GraphQLContext from '../../type/graphql/context';
 const $LoggerContext$ = ($str$:string,$mth$:"query"|"mutate"="query") => (`media_${$mth$}_${$str$}`);
 
@@ -52,7 +52,7 @@ export default {
             }
         },
         /** Obtener la Información de un Medio */
-        media_content: async(_,{paginator,filter,context,search}:{
+        media_content: async(_,{paginator,filter,context,search,identified}:{
             /** Definición del Páginador para el Contexto de Consulta */
             paginator?: Pagination,
             /** Contenedor con los Filtros Activos en la Aplicación para el Contexto de Consulta */
@@ -60,18 +60,34 @@ export default {
             /** Contexto Actual de la Definición de la Aplicación */
             context: MediaType,
             /** Palabras Iniciales para la Definición del Contexto de Búsqueda en el Medio */
-            search?: string
-        },{language}:GraphQLContext): Promise<Media[] | void> => {
+            search?: string,
+            /** Identificador Único del Medio para Filtrar */
+            identified?: string
+        },{language}:GraphQLContext): Promise<PaginationResponse | void> => {
+            const $__isAlterMode__$: boolean = (typeof(filter) != "undefined" || typeof(search) != "undefined");
             const $__storage__$ = (await $Storage$("media"));let $Database$:any;switch(context){
-                default:
+                case "anime":
                     $Database$ = $Anime$;
+                break;
+                case "game":
+                    $Database$ = $Game$;
                 break;
             }try{
                 $Logger$({$type$:"info",$context$:$LoggerContext$(context),$message$:"Inicializando del Objeto con la Información del Medio solicitado..."});
                 let $__default__$ = {active:true};
                 if(search) $__default__$["name"] = (new RegExp(search,"i"));
+                if(identified) $__default__$ = {...$__default__$,...{identified}};
                 const $__instance__$ = $Database$["find"]($__default__$)["sort"]({createdAt:1});
-                if(paginator){
+                const $__paginator__$ = (async($items$:Media[]): Promise<PaginationResponse> => {
+                    const $__selfTotal__$: number = ($__isAlterMode__$ ? $items$["length"] : ((await $Database$["find"]({})["exec"]())["length"]) as number);
+                    return ({
+                        item: $items$,
+                        total: {
+                            elements: $__selfTotal__$,
+                            pages: Math["ceil"](Math["round"]($__selfTotal__$ / (paginator ? paginator["perPage"] : 0)))
+                        }
+                    } as PaginationResponse);
+                });if(paginator){
                     $__instance__$["limit"](paginator["perPage"]);
                     $__instance__$["skip"](paginator["perPage"] * (paginator["currentPage"] - 1));
                 }const $__object__$ = (await $__instance__$["exec"]());
@@ -104,7 +120,7 @@ export default {
                         ));$$["media"] = $__media__$;
                         $__container__$["push"]($$);
                     })
-                ));if($__container__$["length"] == 0) throw new GraphQLError("GraphQLQueryMediaEmptyResponse");else if(filter){
+                ));if(filter){
                     const $__newFilterContainer__$: Media[] = [];
                     ($__container__$["forEach"]($media$ => {
                         if($media$["meta"]) (($media$["meta"] as any) as MediaCategory[])["forEach"](({id,item}) => {
@@ -113,8 +129,8 @@ export default {
                                 if(identified && filter["includes"](`${id}:${identified}`)) $__filter__$["push"](`${id}:${identified}`);
                             }));if($__filter__$["toString"]() == filter["toString"]()) $__newFilterContainer__$["push"]($media$);
                         });
-                    }));return $__newFilterContainer__$;
-                }else return $__container__$;
+                    }));return (await $__paginator__$($__newFilterContainer__$));
+                }else return (await $__paginator__$($__container__$));
             }catch($){
                 $Logger$({$type$:"warn",$context$:$LoggerContext$(context),$message$:"Hubo un error a inicializar la obtención del objeto con la información del medio solicitado mediante el siguiente mensaje \""+$+"\""});
                 (new GraphQLError("GraphQLQueryErrorUnknown"));

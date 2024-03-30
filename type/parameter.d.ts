@@ -32,7 +32,9 @@ export type API = {
     /** Contenedor con los Órigenes HTTP autorizadas en la API Global */
     SecureOriginHTTP: string[],
     /** Contenedor con las Direcciones IPv4 o IPv6 autorizadas en la API Global */
-    SecureOriginIP: string[]
+    SecureOriginIP: string[],
+    /** Identificador Secreto para el Acceso a la API para las Aplicaciones Nativas del Proyecto */
+    SecretAccessByNativeApps: string
 };
 
 /** Prototipo con los Parámetros Globales del Proyecto */
@@ -41,6 +43,8 @@ interface Parameters {
     CkGlobAuthorDesigner: string,
     /** Nombre del Desarrollador Web del Proyecto */
     CkGlobAuthorDeveloper: string,
+    /** Nombre del Traductor General de las Aplicaciones del Proyecto */
+    CkGlobAuthorTranslater: string,
     /** Objeto con los Parámetros Esenciales de la API Global */
     CkGlobParamAPI: API,
     /** Objeto con los Parámetros Globales de las Aplicaciones del Proyecto */
@@ -69,6 +73,19 @@ export interface Pagination {
     currentPage: number,
     /** Número Total de Elementos de la Base de Datos */
     total: number
+};
+
+/** Definición de la Respuesta para la Paginación del Proyecto */
+export interface PaginationResponse {
+    /** Contenedor con Todos los Elementos Manipulados para Mostrar */
+    item: [],
+    /** Objeto con la Información Total de Elementos Obtenidos */
+    total: {
+        /** Total de Páginas a Mostrar en el DOM */
+        pages: number,
+        /** Total de Elementos a Mostrar en el DOM */
+        elements: number
+    }
 };
 
 export default Parameters;

@@ -72,5 +72,7 @@ export interface Media extends Database {
         background?: string,
         /** Contenedor con las Capturas de Pantalla del Medio */
         snapshot?: string[]
-    }
+    },
+    /** Identificador Único del Medio */
+    identified: string
 };

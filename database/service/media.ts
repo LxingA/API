@@ -26,7 +26,7 @@ export const $Category$ = (model("media_category",(new Schema({
             validator: ($value$:Language) => $Language$($value$,{
                 $max$: 100,
                 $min$: 3,
-                $regex$: /[a-zA-Z0-9À-ÿ\u00f1\u00d1\-]/g,
+                $regex$: /[a-zA-Z0-9À-ÿ\u00f1\u00d1\- ]/g,
                 $trim$: false
             }),
             message: "El nombre de la categoría dado, no cumple con el formato establecido"
@@ -118,16 +118,11 @@ export const $Anime$ = (model("media_anime",(new Schema({
         type: Object,
         unique: false,
         default: {
-            es: "Todavía no he visto el anime y no he tenido una expectación respecto a ello. Cuándo finalicé el anime, daré mi opinión sobre ello",
-            en: "I haven't seen the anime yet and I haven't had any expectations about it. When I finished the anime, I will give my opinion on it"
+            es: "Todavía no se ha definido aún una descripción acerca del anime",
+            en: "A description of the anime has not yet been defined"
         },
         validate: {
-            validator: ($value$:Language) => $Language$($value$,{
-                $max$: 800,
-                $min$: 16,
-                $regex$: /[a-zA-Z0-9À-ÿ\u00f1\u00d1\-\:\,\. ]+/g,
-                $trim$: false
-            }),
+            validator: ($value$:{}) => (typeof $value$ == "object"),
             message: "La descripción acerca del anime dado, no cumple con el formato establecido"
         }
     },
@@ -161,5 +156,97 @@ export const $Anime$ = (model("media_anime",(new Schema({
             validator: ($value$:{}) => (typeof $value$ == "object"),
             message: "El contenedor con los metadatos del anime, no cumple con el formato establecido"
         }
+    },
+    /** Identificador Único del Anime (8L) */
+    identified: {
+        required: [true,"Se requiere de un identificador único para el anime"],
+        type: String,
+        trim: true,
+        unique: true,
+        min: 3,
+        max: 8,
+        validate: {
+            validator: ($value$:string) => (typeof $value$ == "string"),
+            message: "El identificador único para el anime, no cumple con el formato establecido"
+        }
     }
 },{collection:$prefix$("anime"),timestamps:true}))));
+
+/** Definición de la Esquema para los Juegos de la Aplicación */
+export const $Game$ = (model("media_game",(new Schema({
+    /** Identificador Único del Juego */
+    _id: {
+        required: false,
+        type: Schema["Types"]["ObjectId"],
+        auto: true
+    },
+    /** Definición del Nombre del Juego Original */
+    name: {
+        required: [true,"Se requiere de un nombre para el juego"],
+        type: String,
+        unique: true,
+        validate: {
+            validator: ($value$:string) => (/^[A-Za-z0-9 \-]+$/["test"]($value$)),
+            message: "El nombre del juego dado, no cumple con el formato establecido"
+        }
+    },
+    /** Descripción Acerca del Juego */
+    description: {
+        required: false,
+        type: Object,
+        default: {
+            es: "No se ha definido aún una descripción acerca del juego",
+            en: "No description of the game has been defined yet"
+        },
+        validate: {
+            validator: ($value$:{}) => (typeof($value$) == "object"),
+            message: "La descripción acerca del juego dado, no cumple con el formato establecido"
+        }
+    },
+    /** Definición de la Calificación del Juego */
+    rate: {
+        required: false,
+        type: Number,
+        unique: false,
+        default: 1,
+        validate: {
+            validator: ($value$:number) => (typeof($value$) == "number"),
+            message: "El número para el puntuaje del juego dado, no cumple con el formato establecido"
+        }
+    },
+    /** Habilitar el Juego en la Aplicación */
+    active: {
+        required: false,
+        type: Boolean,
+        unique: false,
+        default: false,
+        validate: {
+            validator: ($value$:boolean) => (typeof($value$) == "boolean"),
+            message: "El tipo de dato para habilitar el juego, no cumple con el formato establecido"
+        }
+    },
+    /** Objeto con la Información de las Categorías Asociadas al Juego */
+    meta: {
+        required: false,
+        type: Object,
+        unique: false,
+        default: {},
+        validate: {
+            validator: ($value$:{}) => (typeof($value$) == "object"),
+            message: "El objeto con la información de las categorías para el juego, no cumple con el formato establecido"
+        }
+    },
+    /** Identificador Único para el Juego (8L) */
+    identified: {
+        required: [true,"Se requiere de un identificador único para el juego"],
+        type: String,
+        unique: true,
+        trim: true,
+        min: 4,
+        max: 8,
+        validate: {
+            validator: ($value$:string) => (typeof($value$) == "string"),
+            message: "El identificador único asignado al juego, no cumple con el formato establecido"
+        }
+    }
+},{collection:$prefix$("game"),timestamps:true}))));
