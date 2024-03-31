@@ -22,9 +22,14 @@ export type ResponseObject = {
     DateCreated: string
 };
 
+/** Función de Utilidad para la Firma de los Enlaces de los Recursos para el Acceso a la CDN mediante un Token */
+export const $SignedURL$ = () => {
+    
+};
+
 /** Instancia del Almacenamiento Global para la API */
 const $Storage$ = async($suffix$:string) => {
-    const $token$: string = (await $Parameters$())["CkGlobCDNStorageZone"][$suffix$];
+    const $token$: string = (await $Parameters$())["CkGlobCDNStorageZone"][$suffix$]["read"];
     return (new Engine($token$,`ckbucketapp-${$suffix$}`));
 };
 

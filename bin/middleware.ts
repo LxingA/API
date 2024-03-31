@@ -20,21 +20,21 @@ export const $Header$ = async($rq:Request,$rs:Response,$nt:NextFunction): Promis
     if(typeof($rq["header"]($headers$[0])) == "undefined"){
         $Logger$({...$initial$,$message$:"No se encontró la cabecera HTTP \""+$headers$[0]+"\" esencial para la inicialización de la API. Se procede a detener la ejecución...",$type$:"critic"});
         $rs["status"](400)["render"]("default.pug",(await $Template$({__default__:{title:"Cabecera no Definida",subtitle:"La cabecera HTTP esencial para el acceso a la API no está definida"}})));
-        $nt();
+        $rs["end"]();
     }else{
         $Logger$({...$initial$,$message$:"Se encontraron las siguientes cabeceras HTTP \""+$headers$+"\". Se procede a verificar la clave de acceso...",$type$:"ok"});
         const $key$ = $rq["header"]($headers$[0])!;
         if(!(/^([0-9a-z]){8}\-(([0-9a-z]+)\-?){3}([a-z0-9]){12}$/["test"]($key$))){
             $Logger$({...$initial$,$message$:"La clave de aplicación de acceso dado \""+$key$+"\" no tiene un formato valido. Se procede a omitir la inicialización de la API...",$type$:"critic"});
             $rs["status"](400)["render"]("default.pug",(await $Template$({__default__:{title:"Clave no Valida",subtitle:"La clave de aplicación de acceso a la API no es valida"}})));
-            $nt();
+            $rs["end"]();
         }else{
             $Logger$({...$initial$,$message$:"La clave de aplicación de acceso dado \""+$key$+"\" tiene un formato valido. Se procede a verificar la existencia en la base de datos...",$type$:"ok"});
             const $found$ = (await $Application$["exists"]({key:$key$}));
             if(!$found$){
                 $Logger$({...$initial$,$message$:"La clave de aplicación de acceso dado \""+$key$+"\" no existe en la base de datos. Se procede a omitir la inicialización de la API...",$type$:"critic"});
                 $rs["status"](401)["render"]("default.pug",(await $Template$({__default__:{title:"Aplicación no Existente",subtitle:"La clave de aplicación de acceso no existe en la base de datos"}})));
-                $nt();
+                $rs["end"]();
             }else{
                 $Logger$({...$initial$,$message$:"La clave de aplicación de acceso a la API \""+$key$+"\" es valída y se encuentra registrada en la base de datos. Se procede con el acceso a la API...",$type$:"success"});
                 $nt();
@@ -52,7 +52,7 @@ export const $Security$ = async($rq:Request,$rs:Response,$nt:NextFunction): Prom
     if(!$methods$["includes"]($rq["method"])){
         $Logger$({...$initial$,$message$:"El método HTTP \""+$rq["method"]+"\" no está permitida en la API. Se procede a omitir la inicialización...",$type$:"critic"});
         $rs["status"](405)["render"]("default.pug",(await $Template$({__default__:{title:"Método HTTP no Permitida",subtitle:"La cabecera HTTP \""+$rq["method"]+"\" no está permitida en la API"}})));
-        $nt();
+        $rs["end"]();
     }else{
         let $origin$: string[] = [];
         $Logger$({...$initial$,$message$:"El método HTTP \""+$rq["method"]+"\" está permitida en la lista \""+$methods$+"\". Se procede a verificar los origenes HTTP y las direcciones IP para el acceso a la API...",$type$:"ok"});
@@ -62,6 +62,7 @@ export const $Security$ = async($rq:Request,$rs:Response,$nt:NextFunction): Prom
                 if($__parameters__$["SecretAccessByNativeApps"] != $rq["header"]($__parameters__$["HTTPHeader"][2])){
                     $Logger$({...$initial$,$message$:"La clave de acceso especial a la API no coincide con la registrada en la Base de Datos. Se procede a bloquear el acceso...",$type$:"warn"});
                     $rs["status"](400)["render"]("default.pug",(await $Template$({__default__:{title:"Clave de Acceso Inválido",subtitle:"No tienes autorización a la API debido a la clave de acceso inválida"},__cache__:true})));
+                    $rs["end"]();
                 }else $nt();
             }else{
                 $origin$ = $__parameters__$["SecureOriginIP"];
@@ -69,7 +70,7 @@ export const $Security$ = async($rq:Request,$rs:Response,$nt:NextFunction): Prom
                 if(!$origin$["includes"]($rq["clientIp"] || "")){
                     $Logger$({...$initial$,$message$:"La dirección IP de origen \""+$rq["clientIp"]+"\" no está autorizada en la API. Se procede a omitir la inicialización...",$type$:"critic"});
                     $rs["status"](403)["render"]("default.pug",(await $Template$({__default__:{title:"Dirección IP no Autorizada",subtitle:"Lo sentimos. La dirección IP de dónde nos visitas no está autorizada. Solicitado al Administrador"}})));
-                    $nt();
+                    $rs["end"]();
                 }else{
                     $Logger$({...$initial$,$message$:"La dirección IP \""+$rq["clientIp"]+"\" está autorizada. Se procede con la inicialización de la API...",$type$:"success"});
                     $nt();
@@ -81,7 +82,7 @@ export const $Security$ = async($rq:Request,$rs:Response,$nt:NextFunction): Prom
             if(!$origin$["includes"]($rq["header"]("Origin") || $rq["header"]("Referer") || "")){
                 $Logger$({...$initial$,$message$:"El origen HTTP solicitado \""+($rq["header"]("Origin") || $rq["header"]("Referer"))+"\" no está autorizada en la API. Se procede a omitir la inicialización...",$type$:"critic"});
                 $rs["status"](403)["render"]("default.pug",(await $Template$({__default__:{title:"Origen HTTP no Permitida",subtitle:"Lo sentimos. El origen HTTP de dónde nos visitas no está permitida. Solicitalo al Administrador"}})));
-                $nt();
+                $rs["end"]();
             }else{
                 $Logger$({...$initial$,$message$:"El origen HTTP \""+($rq["header"]("Origin") || $rq["header"]("Referer"))+"\" está autorizada en la API. Se procede con la inicialización de la API...",$type$:"success"});
                 $nt();

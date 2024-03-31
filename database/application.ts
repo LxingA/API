@@ -166,6 +166,15 @@ const Application = (new Schema({
             validator: ($value:boolean) => (typeof($value) == "boolean"),
             message: "El indicador para definir el estilo local no cumple con el formato establecido"
         }
+    },
+    /** Indicar sí el Punto Final de la CDN de los Recursos de la Aplicación sea Habilitado en Modo CORS */
+    cors: {
+        required: [true,"Se requiere establecer el tipo de CORS en el Punto Final de la CDN"],
+        type: Boolean,
+        validate: {
+            validator: ($value$:boolean) => (typeof($value$) == "boolean"),
+            message: "El indicador para indicar que el punto final de los recursos se establezca en CORS no cumple con el formato establecido" 
+        }
     }
 },{timestamps:true,collection:"application"}));
 

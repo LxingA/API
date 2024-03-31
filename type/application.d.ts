@@ -36,7 +36,9 @@ interface Application extends Database {
     /** Contenedor con las Claves Clave para el SEO de la Aplicación */
     keywords?: string[],
     /** Indicar sí el Estilo de la Aplicación se Renderizará de Forma Local o mediante la CDN */
-    localStyle: boolean
+    localStyle: boolean,
+    /** Establecer el Punto Final de los Recursos de la CDN en Modo CORS */
+    cors: boolean
 };
 
 export default Application;

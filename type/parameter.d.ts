@@ -50,7 +50,12 @@ interface Parameters {
     /** Objeto con los Parámetros Globales de las Aplicaciones del Proyecto */
     CkGlobParamAPP: Application,
     /** Objeto con las Claves de Acceso a los Cubos de Almenamiento del Proyecto */
-    CkGlobCDNStorageZone: Record<string,string>
+    CkGlobCDNStorageZone: Record<string,{
+        /** Token de Acceso a Modo Lectura de un Cubo */
+        readonly read: string,
+        /** Token de Acceso para la Firma de una URL Pública de un Cubo */
+        readonly signed: string
+    }>
 };
 
 /** Definición de la Interfaz para el Objeto de Respuesta de la API */

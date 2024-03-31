@@ -43,5 +43,7 @@ export type Service = {
     /** Contenedor con las Palabras Claves para el SEO del Servicio */
     keywords?: string[],
     /** Indicar sí el Estilo de la Aplicación se Renderizará de Forma Local o mediante la CDN */
-    localStyle: boolean
+    localStyle: boolean,
+    /** Clave de Acceso a los Recursos Globales de los Puntos Finales del CDN del Proyecto */
+    token?: string
 };
