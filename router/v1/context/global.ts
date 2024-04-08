@@ -77,7 +77,7 @@ $Global$["get"]("/",async($rq:Request,$rs:Response) => {
                     general: $__application__$["global"],
                     keywords: $__application__$["keywords"],
                     localStyle: $__application__$["localStyle"],
-                    token: (!$__application__$["cors"]) ? `${$__params__$["CkGlobCDNStorageZone"][($__application__$["name"]["split"]("-")[1])]["signed"]["replace"](/\-/g,"_")}-${Math["floor"]((Date["now"]() / 1000) + 604800)}` : undefined
+                    token: (!$__application__$["cors"]) ? `${$__params__$["CkGlobCDNStorageZone"][($__application__$["name"]["split"]("-")[1])]["signed"]["replace"](/\-/g,"_")}-${Math["floor"]((Date["now"]() / 1000) + 86400)}` : undefined
                 } as Service);
             }
         break;
