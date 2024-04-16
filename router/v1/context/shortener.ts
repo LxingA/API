@@ -73,4 +73,29 @@ $Shortener$["put"]("/",async($rq:Request,$rs:Response) => {
     }
 });
 
+/** Definición del Contexto POST para la Añadición/Comprobación de Información de la Aplicación */
+$Shortener$["post"]("/",async($rq:Request,$rs:Response) => {
+    const $__logger__$ = {$context$:"shortener_context_post",$country$:$rq["clientIp"]};
+    $Logger$({...$__logger__$,$message$:"Inicializando la consulta del obtenedor de información en ámbito de la aplicación shortener...",$type$:"info"});
+    if(await ($Context$["$__initial__$"]({$addon$:$__logger__$,$request$:$rq,$response$:$rs}))) switch($rq["body"]["context"]){
+        /** Verificar la Existencia del Usuario y su Contraseña para el Acceso al Panel de Control */
+        case "check_exists_user":
+            let $__response__$ = {$tt$:(Date["now"]())};
+            if("username" in $rq["body"] && "password" in $rq["body"]){
+                $Logger$({...$__logger__$,$message$:"Inicializando la comprobación de las credenciales de acceso...",$type$:"ok"});
+                
+            }else{
+                $Logger$({...$__logger__$,$message$:"No se encontró las credenciales de acceso al panel de control en el cuerpo de la solicitud",$type$:"warn"});
+                $__response__$["$rs$"] = null;
+                $__response__$["$st$"] = false;
+                $__response__$["$ms$"] = "No se envío en el cuerpo de la solicitud las credenciales de acceso";
+                $rs["status"](500)["json"]($__response__$ as APIResponse);
+            }
+        break;
+        default:
+            (await $Context$["$__404__$"]({$addon$:$__logger__$,$request$:$rq,$response$:$rs}));
+        break;
+    }
+});
+
 export default $Shortener$;

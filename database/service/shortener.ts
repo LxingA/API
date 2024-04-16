@@ -81,3 +81,66 @@ export const $Link$ = (model("link",(new Schema({
         }
     }
 },{collection:$prefix$("link"),timestamps:true}))));
+
+/** Definición de la Esquema para los Usuarios Autorizados de la Aplicación */
+export const $User$ = (model("user",(new Schema({
+    /** Identificador Único del Usuario en la Base de Datos */
+    _id: {
+        required: false,
+        type: Schema["Types"]["ObjectId"],
+        auto: true
+    },
+    /** Nombre del Usuario con el Primer Nombre y Apellido del Usuario */
+    name: {
+        required: false,
+        type: String,
+        unique: false,
+        min: 6,
+        max: 64,
+        default: "Usuario Predeterminado",
+        validate: {
+            validator: ($value$:string) => /^([A-Z]{1}[a-z ]+){1,2}$/["test"]($value$),
+            message: "El nombre completo del usuario no cumple con el formato establecido"
+        }
+    },
+    /** Nombre de Apodo del Usuario */
+    nick: {
+        required: [true,"Se requiere de un nombre identificable para el usuario"],
+        type: String,
+        trim: true,
+        unique: true,
+        min: 4,
+        max: 16,
+        validate: {
+            validator: ($value$:string) => /^[A-Za-z0-9]+$/["test"]($value$),
+            message: "El nombre del apodo dado no cumple con el formato establecido"
+        }
+    },
+    /** Correo Electrónico del Usuario */
+    mail: {
+        required: [true,"Se requiere de un correo electrónico para el usuario"],
+        type: String,
+        trim: true,
+        lowercase: true,
+        unique: true,
+        min: 6,
+        max: 64,
+        validate: {
+            validator: ($value$:string) => /^[a-z0-9A-Z\-\_]+\@[a-z]\.([a-z]){2,3}(\.([a-z]){2,3})?$/["test"]($value$),
+            message: "El correo electrónico dado no cumple con el formato establecido"
+        }
+    },
+    /** Contraseña Definida por el Usuario */
+    password: {
+        required: [true,"Se requiere de una contraseña para el usuario encriptado"],
+        type: String,
+        trim: true,
+        unique: true,
+        min: 8,
+        max: 256,
+        validate: {
+            validator: ($value$:string) => /^[A-Za-z0-9\\\/\$\.]+$/["test"]($value$),
+            message: "El formato de la contraseña con la definición encriptada no es valída"
+        }
+    }
+},{collection:$prefix$("user"),timestamps:true}))));
